@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Create Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 3px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        #add-question {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #add-question:hover {
+            background-color: #45a049;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .question-block {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+
+        .question-block label {
+            font-weight: normal;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create a Quiz</h1>
+        <form action="/create-quiz" method="POST">
+            <label for="title">Quiz Title:</label>
+            <input type="text" id="title" name="title" required>
+
+            <div id="questions-container">
+                <div class="question-block">
+                    <label for="question1">Question 1:</label>
+                    <input type="text" id="question1" name="questions[]" required>
+
+                    <label>Options:</label>
+                    <input type="text" name="options[0][]" placeholder="Option 1" required>
+                    <input type="text" name="options[0][]" placeholder="Option 2" required>
+                    <input type="text" name="options[0][]" placeholder="Option 3" required>
+                    <input type="text" name="options[0][]" placeholder="Option 4" required>
+
+                    <label for="correct-answer1">Correct Answer:</label>
+                    <input type="text" id="correct-answer1" placeholder="eg- 1" name="correct_answers[]" required>
+                </div>
+            </div>
+
+            <button type="button" id="add-question">Add Another Question</button>
+            <button type="submit">Create Quiz</button>
+        </form>
+    </div>
+
+    <script>
+        // Add new question block dynamically
+        let questionCount = 1;
+        document.getElementById('add-question').addEventListener('click', () => {
+            questionCount++;
+            const questionBlock = `
+                <div class="question-block">
+                    <label for="question${questionCount}">Question ${questionCount}:</label>
+                    <input type="text" id="question${questionCount}" name="questions[]" required>
+
+                    <label>Options:</label>
+                    <input type="text" name="options[${questionCount - 1}][]" placeholder="Option 1" required>
+                    <input type="text" name="options[${questionCount - 1}][]" placeholder="Option 2" required>
+                    <input type="text" name="options[${questionCount - 1}][]" placeholder="Option 3" required>
+                    <input type="text" name="options[${questionCount - 1}][]" placeholder="Option 4" required>
+
+                    <label for="correct-answer${questionCount}">Correct Answer:</label>
+                    <input type="text" id="correct-answer${questionCount}" name="correct_answers[]" required>
+                </div>
+            `;
+            document.getElementById('questions-container').insertAdjacentHTML('beforeend', questionBlock);
+        });
+    </script>
+</body>
+
+</html>

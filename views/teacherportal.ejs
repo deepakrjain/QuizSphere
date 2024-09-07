@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher's Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .header-text {
+            margin-bottom: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 80px;
+            background-color: #FAFFAF;
+            margin-bottom: 50px;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        a {
+            background-color: #0d6efd;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 0.8rem 2.4rem;
+            border-radius: 0.8rem;
+            font-size: 1rem;
+            font-weight: 500;
+            font-family: "Inter", sans-serif;
+            transition: all 0.2s ease-in-out;
+        }
+
+        a:hover {
+            -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <li>
+            <h3>Teacher's Dashboard</h3>
+        </li>
+        <li>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </li>
+    </nav>
+    <div class="container">
+
+        <div class="text-center">
+            <a href="create-quiz.html" class="btn btn-primary btn-create">Create New Quiz</a>
+        </div>
+
+        <div id="quizzesContainer">
+            <h4>All Quizzes</h4>
+            <ul id="quizList" class="list-group">
+                <!-- Quizzes will be loaded here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/quizzes')
+                .then(response => response.json())
+                .then(quizzes => {
+                    const quizList = document.getElementById('quizList');
+                    quizzes.forEach(quiz => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.innerHTML = `
+        <h5>${quiz.title}</h5>
+        <p>Prepared by: ${quiz.teacher_name}</p> <!-- Teacher name added here -->
+        <a href="/view-results/${quiz.id}" class="btn btn-info btn-sm">View Results</a>
+        <button class="btn btn-danger btn-sm ms-2" onclick="deleteQuiz(${quiz.id})">Delete Quiz</button>
+    `;
+                        quizList.appendChild(li);
+                    });
+                });
+        });
+
+        function deleteQuiz(quizId) {
+            fetch(`/delete-quiz/${quizId}`, { method: 'DELETE' })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    window.location.reload(); // Refresh the page to update the list
+                });
+        }
+    </script>
+</body>
+
+</html>

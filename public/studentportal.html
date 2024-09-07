@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .header-text {
+            margin-bottom: 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 80px;
+            background-color: #FAFFAF;
+        }
+
+        li {
+            list-style-type: none;
+        }
+
+        a:hover {
+            -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+            -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+            box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+        }
+    </style>
+    <title>Student Dashboard</title>
+</head>
+
+<body>
+    <nav>
+        <li>
+            <h3>Student's Dashboard</h3>
+        </li>
+        <li>
+            <a href="/logout" class="btn btn-danger">Logout</a>
+        </li>
+    </nav>
+    <div class="container mt-5">
+        <h2>Available Quizzes</h2>
+        <ul id="quizList" class="list-group mt-4">
+            <!-- Quizzes will be dynamically listed here -->
+        </ul>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/quizzes')  // Make sure this endpoint is working and returns a list of quizzes
+                .then(response => response.json())
+                .then(quizzes => {
+                    const quizList = document.getElementById('quizList');
+                    quizzes.forEach(quiz => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.innerHTML = `
+                            <h5>${quiz.title}</h5>
+                            <p>Prepared by: ${quiz.teacher_name}</p> <!-- Teacher's name added here -->
+                            <a href="/take-quiz/${quiz.id}" class="btn btn-primary btn-sm">Take Quiz</a>
+                        `;
+                        quizList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching quizzes:', error);
+                    alert('Failed to load quizzes. Please try again later.');
+                });
+        });
+    </script>
+</body>
+
+</html>

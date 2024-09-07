@@ -1,0 +1,1 @@
+similarly give me the student dashboard, where they can view the available quizes and if they have given that quiz, they will have the option to view result. also, for each quiz, keep a ranking/leaderboard option too.

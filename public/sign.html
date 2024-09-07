@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login & Signup Form</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin-left: 80vh;
+    }
+
+    #roles {
+      height: auto;
+      display: inline-block;
+    }
+
+    label {
+      display: inline;
+      height: 60px;
+      padding: 0 15px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="wrapper">
+    <div class="form signup">
+      <header>Signup</header>
+      <form id="signupForm" action="/signup" method="POST">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="email" placeholder="Mail" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="radio" id="roles" name="role" value="student" required>
+        <label for="student">Student</label>
+        <input type="radio" id="roles" name="role" value="teacher" required>
+        <label for="teacher">Teacher</label>
+        <input type="submit" value="Sign Up">
+      </form>
+    </div>
+
+    <div class="form login">
+      <header>Login</header>
+      <form id="loginForm" action="/login" method="POST">
+        <input type="text" name="email" placeholder="Email address" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="submit" value="Login">
+      </form>
+    </div>
+
+    <script>
+      const wrapper = document.querySelector(".wrapper"),
+        signupHeader = document.querySelector(".signup header"),
+        loginHeader = document.querySelector(".login header");
+
+      loginHeader.addEventListener("click", () => {
+        wrapper.classList.add("active");
+      });
+      signupHeader.addEventListener("click", () => {
+        wrapper.classList.remove("active");
+      });
+      document.getElementById('signupForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Signup successful! Redirecting to your dashboard...');
+          window.location.href = `/${result.role}portal`;
+        } else {
+          alert('Signup failed: ' + result.message);
+        }
+      });
+
+      document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          window.location.href = result.redirectUrl;
+        } else {
+          alert('Login failed: ' + result.message);
+        }
+      });
+    </script>
+  </section>
+</body>
+
+</html>

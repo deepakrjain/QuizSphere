@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-left: 5px solid #4CAF50;
+            border-radius: 8px;
+        }
+
+        .question h4 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        label {
+            font-size: 16px;
+            color: #555;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .question:hover {
+            background-color: #e8f5e9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Take Quiz</h1>
+        <form action="/submit-quiz/<%= quizId %>" method="POST">
+            <!-- Hidden fields for passing quiz ID and student ID -->
+            <input type="hidden" name="quizId" value="<%= quizId %>">
+            <input type="hidden" name="student_id" value="<%= student_id %>">
+
+            <!-- Loop through the quiz data to display questions and options -->
+            <% quizData.forEach(function(question) { %>
+                <div class="question">
+                    <h4>
+                        <%= question.question_text %>
+                    </h4>
+
+                    <!-- Loop through the options for each question -->
+                    <% question.options.forEach(function(option) { %>
+                        <label>
+                            <!-- Radio button for each option, grouped by question ID -->
+                            <input type="radio" name="answers[<%= question.question_id %>]" value="<%= option.option_id %>"
+                                required>
+                            <%= option.option_text %>
+                        </label><br>
+                    <% }) %>
+                </div>
+            <% }) %>
+            <!-- Submit button -->
+            <button type="submit">Submit Quiz</button>
+        </form>
+    </div>
+</body>
+
+</html>

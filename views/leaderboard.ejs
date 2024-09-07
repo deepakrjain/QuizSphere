@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Leaderboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Leaderboard for Quiz ID: <span id="quiz_id"><%= quizId %></span></h1>
+    <p>Your score: <%= studentScore %></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Student Name</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% leaderboard.forEach((student, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= student.name %></td>
+                    <td><%= student.score %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <a href="studentportal">Back to Student Portal</a>
+    <script>
+        // Correctly retrieve the quizId from the span element
+        const quizId = document.getElementById('quiz_id').textContent.trim();
+        console.log(quizId);
+
+        function fetchLeaderboard() {
+            fetch(`/api/leaderboard/${quizId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Debugging purposes
+                    renderLeaderboard(data);
+                })
+                .catch(error => console.error('Error fetching leaderboard:', error));
+        }
+        // Call this function after the quiz submission or when loading the leaderboard page
+        fetchLeaderboard();
+
+        function renderLeaderboard(leaderboardData) {
+            const leaderboardTable = document.getElementById('leaderboard-table-body');
+            leaderboardTable.innerHTML = ''; // Clear existing rows
+
+            if (leaderboardData.length > 0) {
+                leaderboardData.forEach((entry, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${entry.username}</td>
+                        <td>${entry.score}</td>
+                    `;
+                    leaderboardTable.appendChild(row);
+                });
+            } else {
+                leaderboardTable.innerHTML = '<tr><td colspan="3">No leaderboard data available.</td></tr>';
+            }
+        }
+    </script>
+</body>
+</html>
