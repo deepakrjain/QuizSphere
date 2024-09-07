@@ -40,4 +40,4 @@ The Quiz Management System is a web application for creating, managing, and taki
 - Create and manage quizzes from the dashboard.
 
 **Student Portal:**
--Take available quizzes and view results and leaderboard.
+- Take available quizzes and view results and leaderboard.
